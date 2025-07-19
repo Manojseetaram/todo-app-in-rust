@@ -1,7 +1,7 @@
 import type { Todo } from './types';
 import { decodeUUID } from './types';
 
-const API_URL = 'https://todo-app-in-rust.onrender.com';
+const API_URL = 'https://todo-app-in-rust-1.onrender.com';
 
 
 
