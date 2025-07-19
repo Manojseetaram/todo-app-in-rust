@@ -11,6 +11,7 @@ use mongodb::{
     bson::{doc, Binary, spec::BinarySubtype},
     Collection,
 };
+
 use uuid::Uuid;
 
 
@@ -162,6 +163,8 @@ async fn delete_all_todos(data: web::Data<AppState>) -> impl Responder {
 // }
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
+    dotenv::dotenv().ok();
+
     let db = connect_to_db().await;
     let todo_collection = db.collection::<TodoItem>("todos");
 
