@@ -1,12 +1,12 @@
 import type { Todo } from './types';
 import { decodeUUID } from './types';
 
-const API_URL = 'http://127.0.0.1:8080';
+const API_URL = 'https://todo-app-in-rust.onrender.com';
 
 
 
 export async function fetchTodos(): Promise<Todo[]> {
-  const res = await fetch('http://127.0.0.1:8080/todos');
+  const res = await fetch(`${API_URL}/todos`);
   const data = await res.json();
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
