@@ -132,6 +132,34 @@ async fn delete_all_todos(data: web::Data<AppState>) -> impl Responder {
     }
 }
 
+// #[actix_web::main]
+// async fn main() -> std::io::Result<()> {
+//     let db = connect_to_db().await;
+//     let todo_collection = db.collection::<TodoItem>("todos");
+
+//     let app_state = web::Data::new(AppState { todo_collection });
+
+//     println!("Server running at http://127.0.0.1:8080");
+
+//     HttpServer::new(move || {
+//         let cors = Cors::default()
+//             .allow_any_origin()
+//             .allow_any_method()
+//             .allow_any_header();
+
+//         App::new()
+//             .app_data(app_state.clone())
+//             .wrap(cors)
+//             .route("/todos", web::get().to(get_todos))
+//             .route("/todos", web::post().to(add_todo))
+//             .route("/todos/{id}", web::put().to(update_todo))
+//             .route("/todos/{id}", web::delete().to(delete_todo))
+//             .route("/todos",web::delete().to(delete_all_todos) )
+//     })
+//     .bind("127.0.0.1:8080")?
+//     .run()
+//     .await
+// }
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     let db = connect_to_db().await;
@@ -139,7 +167,13 @@ async fn main() -> std::io::Result<()> {
 
     let app_state = web::Data::new(AppState { todo_collection });
 
-    println!("Server running at http://127.0.0.1:8080");
+    // Get the PORT from environment variable (Render will set it)
+    let port = std::env::var("PORT")
+        .unwrap_or_else(|_| "8080".to_string()) // fallback for local dev
+        .parse::<u16>()
+        .expect("PORT must be a number");
+
+    println!("Server running on port {}", port);
 
     HttpServer::new(move || {
         let cors = Cors::default()
@@ -154,9 +188,9 @@ async fn main() -> std::io::Result<()> {
             .route("/todos", web::post().to(add_todo))
             .route("/todos/{id}", web::put().to(update_todo))
             .route("/todos/{id}", web::delete().to(delete_todo))
-            .route("/todos",web::delete().to(delete_all_todos) )
+            .route("/todos", web::delete().to(delete_all_todos))
     })
-    .bind("127.0.0.1:8080")?
+    .bind(("0.0.0.0", port))?  // <- IMPORTANT for Render: use 0.0.0.0
     .run()
     .await
 }
